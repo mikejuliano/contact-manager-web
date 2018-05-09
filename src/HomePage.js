@@ -1,11 +1,13 @@
 // HomePage.js
 import React, {Component} from 'react';
+import {Contact} from './Contact';
+import {LoadingWrapper} from './LoadingWrapper';
 
 export default class HomePage extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {contacts: []};
+    this.state = {contacts: [], isLoadingContacts: false};
   }
 
   componentDidMount() {
@@ -16,10 +18,11 @@ export default class HomePage extends Component {
     const url = '/api/v1/contacts/';
     const options = {method: 'GET'};
     const headers = {'Content-Type': 'application/json'};
+    this.setState({isLoadingContacts: true});
     return fetch(url, {headers, ...options})
       .then(r => r.json())
       .then(contacts => {
-        this.setState({contacts});
+        this.setState({contacts, isLoadingContacts: false});
       });
   }
 
@@ -33,9 +36,11 @@ export default class HomePage extends Component {
         </div>
         <div>
           <h3>Contacts</h3>
-          { this.state.contacts.map((contact, index) => <div key={ index }>
-            { `Name: ${contact.first_name} ${contact.last_name} | Email: ${contact.email}` }
-          </div>) }
+          <LoadingWrapper isLoading={ this.state.isLoadingContacts } message={ 'Loading Contacts...' }>
+            { this.state.contacts.map((contact, index) => (
+              <Contact key={ index } contact={ contact }/>
+            )) }
+          </LoadingWrapper>
         </div>
       </div>
     );

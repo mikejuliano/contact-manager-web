@@ -2,8 +2,8 @@
 
 import React from 'react';
 
-export const Loading = ({}) => <h3>Loading...</h3>;
+export const Loading = ({message = 'Loading...'}) => <h3>{ message }</h3>;
 
-export const LoadingWrapper = ({isLoading, children}) => {
-  return isLoading ? <Loading/> : children;
+export const LoadingWrapper = ({isLoading, children, message}) => {
+  return isLoading ? <Loading message={ message }/> : children;
 };
